@@ -1,0 +1,16 @@
+.Navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: blue;
+}
+
+.aNav{
+    text-decoration: none;
+    color: white
+}
+
+.img{
+    width: 32px;
+    height: 32px;
+}
