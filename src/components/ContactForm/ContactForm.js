@@ -16,7 +16,7 @@ const ContactForm = ({ onConfirm }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <input placeholder='Nombre y Apellido' required value={name} onChange={(e) => setName(e.target.value)}/>
+            <input placeholder='Nombre y Apellido'  value={name} onChange={(e) => setName(e.target.value)}/>
             <input placeholder='Telefono' required value={phone} onChange={(e) => setPhone(e.target.value)}/>
             <input placeholder='E-mail' required  value={email} onChange={(e) => setEmail(e.target.value)}/>
             <button>Generar orden</button>
