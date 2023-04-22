@@ -1,35 +1,66 @@
-import { useEffect, useState } from 'react'
-import { getProductById} from "../../asyncMock"
-import { useParams } from "react-router-dom"
-import ItemDetail from "../ItemDetail/ItemDetail"
+import './ItemDetailContainer.css'
+import { useState, useEffect } from 'react'
+// import { getProductById } from '../../asyncMock'
+import ItemDetail from '../ItemDetail/ItemDetail'
+import { useParams } from 'react-router-dom'
+
+import { getDoc, doc } from 'firebase/firestore'
+import { db } from '../../services/firebase/firebaseConfig'
+
+import { createAdaptedProductFromFirestore } from '../../adapters/createAdaptedProductFromFirestore'
+import { getProductById } from '../../services/firebase/firestore/products'
+import { useAsync } from '../../hooks/useAsync'
 
 const ItemDetailContainer = () => {
-    const [product, setProduct] = useState({})
-    const [loading, setLoading] = useState(true)
+    const { itemId } = useParams()
 
-    const {productId} = useParams()
-    
-    useEffect(() => {
-    getProductById(productId)
-    .then(response => {
-        setProduct(response)
-    })
-    .catch(error => {
-        console.log(error)
-    })
-    .finally(() => {
-        setLoading(false)
-    })  
-}, [productId])
+    const getProductWithId = () => getProductById(itemId)
+
+    const { data: product, error, loading} = useAsync(getProductWithId, [itemId])
+
+    // const [product, setProduct] = useState()
+    // const [loading, setLoading] = useState(true)
+
+
+
+    // useEffect(() => {
+    //     setLoading(true)
+
+    //     const productRef = doc(db, 'products', itemId)
+
+    //     getDoc(productRef)
+    //         .then(snapshot => {
+    //             console.log(snapshot)
+    //             const productAdapted = createAdaptedProductFromFirestore(snapshot)
+    //             setProduct(productAdapted)
+    //         })
+    //         .catch(error => {
+    //             console.log(error)
+    //         })
+    //         .finally(() => {
+    //             setLoading(false)
+    //         })
+    // }, [itemId])
 
     if(loading) {
-        return <h1>Cargando...</h1>
+        return (
+            <div>
+                <h1>Cargando...</h1>
+            </div>
+        )
     }
 
-    return (
-        <div>
-            <h1>Detalle del producto</h1>
-            <ItemDetail {...product} />
+    if(error) {
+        return (
+            <div>
+                <h1>Hubo un error</h1>
+            </div>
+        )
+    }
+
+    return(
+        <div className='ItemDetailContainer' >
+            <ItemDetail  {...product} />
         </div>
     )
 }
